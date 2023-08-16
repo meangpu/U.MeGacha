@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public class GachaManager : MonoBehaviour
+namespace Meangpu.Gacha
 {
-        
+    public class GachaManager : MonoBehaviour
+    {
+
+    }
 }
