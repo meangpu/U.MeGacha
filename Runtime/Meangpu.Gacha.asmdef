@@ -1,7 +1,10 @@
 {
     "name": "Meangpu.Gacha",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:3d59d1e925635174b99d0aae53af3aac",
+        "GUID:f24cf67903b27ae498b3069ecc30cc11"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
