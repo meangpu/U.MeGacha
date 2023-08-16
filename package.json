@@ -1,9 +1,9 @@
 {
-  "name": "com.meangpu.tools",
+  "name": "com.meangpu.gacha",
   "version": "0.0.1",
   "unity": "2021.3",
-  "displayName": "MeTools",
-  "description": "the helpful des \n very use ful",
+  "displayName": "MeGacha",
+  "description": "meangpu gacha system aim to make easy gacha",
   "type": "template",
   "author": {
     "name": "meangpu",
@@ -11,11 +11,5 @@
   },
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6"
-  },
-  "samples": [
-    {
-      "displayName": "ColorSet",
-      "path": "Samples~/ColorSet"
-    }
-  ]
+  }
 }
