@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 using EasyButtons;
 
 namespace Meangpu.Gacha
@@ -8,89 +7,77 @@ namespace Meangpu.Gacha
     [CreateAssetMenu(fileName = "SOLootTable", menuName = "Meangpu/Gacha/SOLootTable")]
     public class SOLootTable : ScriptableObject
     {
-        public List<GachaWithRate> DropRate;
-        public List<GachaWithRate> DropRateCanDelete;
+        public List<GachaWithRate> DropRate = new();
 
-        float _totalWeight;
-        bool _isInitializedNormal;
-        bool _isInitializedPoolCanDelete;
+        [Header("This two below is for debug only")]
+        public List<GameObject> ObjectLootList = new();
+        public List<GameObject> ObjectCanRemoveList = new();
 
-        public bool IsDeleteOnGet;
-        public bool ResetPoolOnReachZero;
-        public int DeleteNumber = 1;
+        bool _isInitialized;
+
+        [SerializeField] bool _isDeleteAfterGet;
+        [SerializeField] bool _isAutoReset = true;
+
+        [Button]
+        public void ResetInit()
+        {
+            _isInitialized = false;
+            InitializeNormalPool();
+        }
 
         void InitializeNormalPool()
         {
-            if (!_isInitializedNormal)
+            if (!_isInitialized)
             {
-                _totalWeight = DropRate.Sum(Object => Object.Rate);
-                _isInitializedNormal = true;
+                _isInitialized = true;
+                SetupLootList();
+                ObjectCanRemoveList = new(ObjectLootList);
             }
         }
 
-        void InitializePoolCanDelete()
+        private void SetupLootList()
         {
-            if (!_isInitializedPoolCanDelete)
+            ObjectLootList.Clear();
+            foreach (GachaWithRate item in DropRate)
             {
-                DropRateCanDelete.Clear();
-                DropRateCanDelete = new(DropRate);
-                _isInitializedPoolCanDelete = true;
+                for (int i = 0; i < item.Rate; i++) ObjectLootList.Add(item.Object);
             }
         }
 
         [Button]
         public GameObject GetRandomObject()
         {
-            if (IsDeleteOnGet)
-                return GetRandomRollAndDelete();
-            else
-                return GetRandomRoll();
+            if (_isDeleteAfterGet) return GetRandomRemove();
+            else return GetRandomNoRemove();
         }
 
-        private GameObject GetRandomRollAndDelete()
-        {
-            InitializePoolCanDelete();
-            _totalWeight = DropRateCanDelete.Sum(Object => Object.Rate);
-            if (_totalWeight <= 0)
-            {
-                _isInitializedPoolCanDelete = false;
-                InitializePoolCanDelete();
-            }
-
-            float diceRoll = Random.Range(0, _totalWeight);
-            foreach (GachaWithRate item in DropRateCanDelete)
-            {
-                if (item.Rate >= diceRoll)
-                {
-                    item.Rate -= DeleteNumber;
-#if UNITY_EDITOR
-                    Debug.Log($"{item.Object}");
-#endif
-                    return item.Object;
-                }
-                diceRoll -= item.Rate;
-            }
-            throw new System.Exception("Fail generate reward");
-        }
-
-        private GameObject GetRandomRoll()
+        private GameObject GetRandomRemove()
         {
             InitializeNormalPool();
-            float diceRoll = Random.Range(0, _totalWeight);
-
-            foreach (GachaWithRate item in DropRate)
+            if (ObjectCanRemoveList.Count == 0)
             {
-                if (item.Rate >= diceRoll)
+                if (_isAutoReset)
                 {
-#if UNITY_EDITOR
-                    Debug.Log($"{item.Object}");
-#endif
-                    return item.Object;
+                    ObjectCanRemoveList = new(ObjectLootList);
                 }
-
-                diceRoll -= item.Rate;
+                else
+                {
+                    Debug.Log($"<color=red>Object is not set to auto reset</color>");
+                    return null;
+                }
             }
-            throw new System.Exception("Fail generate reward");
+
+            int randomIndex = Random.Range(0, ObjectCanRemoveList.Count);
+            GameObject finalObject = ObjectCanRemoveList[randomIndex];
+            ObjectCanRemoveList.RemoveAt(randomIndex);
+            return finalObject;
+        }
+
+        private GameObject GetRandomNoRemove()
+        {
+            InitializeNormalPool();
+            int randomIndex = Random.Range(0, ObjectLootList.Count);
+            return ObjectLootList[randomIndex];
         }
 
         [Button]
