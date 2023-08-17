@@ -7,6 +7,7 @@ namespace Meangpu.Gacha
     [CreateAssetMenu(fileName = "SOLootTable", menuName = "Meangpu/Gacha/SOLootTable")]
     public class SOLootTable : ScriptableObject
     {
+        public List<GameObject> TemplateObject = new();
         public List<GachaWithRate> DropRate = new();
 
         [Header("This two below is for debug only")]
@@ -17,6 +18,16 @@ namespace Meangpu.Gacha
 
         [SerializeField] bool _isDeleteAfterGet;
         [SerializeField] bool _isAutoReset = true;
+
+        [Button]
+        public void INIT_DROP_RATE_BY_OBJECT()
+        {
+            DropRate.Clear();
+            foreach (GameObject obj in TemplateObject)
+            {
+                DropRate.Add(new (obj, 1));
+            }
+        }
 
         [Button]
         public void ResetInit()

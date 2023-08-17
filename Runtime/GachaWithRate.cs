@@ -7,5 +7,10 @@ namespace Meangpu.Gacha
     {
         public GameObject Object;
         public int Rate;
+        public GachaWithRate(GameObject obj, int rate)
+        {
+            Object = obj;
+            Rate = rate;
+        }
     }
 }

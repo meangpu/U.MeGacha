@@ -18,7 +18,8 @@ namespace Meangpu.Gacha
         [SerializeField] protected Vector3 _spawnOffset = new();
 
         [SerializeField] protected bool _DeleteObjectOnSpawn;
-        public void GetItemFromLootTable() => _startTable.GetRandomObject();
+
+        public void GetRandomFromLootTable() => _startTable.GetRandomObject();
 
         [Button]
         public void CreatePreviewGameObject()
@@ -56,7 +57,7 @@ namespace Meangpu.Gacha
         }
 
         [Button]
-        public void SpawnPosFromPreview()
+        public void DefaultSpawnFromPreview()
         {
             if (_DeleteObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
             GameObject nowObj = GetObjectFromPreview();
