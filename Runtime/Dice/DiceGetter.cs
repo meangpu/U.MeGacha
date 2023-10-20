@@ -15,6 +15,7 @@ namespace Meangpu.Dice
         [SerializeField] UnityEvent _onStartEvent;
         [SerializeField] UnityEvent _onShuffleEvent;
         [SerializeField] UnityEvent _onFinishEvent;
+        [SerializeField] SOSound _finishSound;
         [Header("Setting")]
         [SerializeField] bool _doPlayAnimation;
         [SerializeField] float _timeBetweenRandom = 0.05f;
@@ -49,6 +50,7 @@ namespace Meangpu.Dice
                 SpriteWithValue diceObj = _pool.GetRandomDice();
                 _diceImgDisplay.sprite = diceObj.Sprite;
             }
+            _finishSound?.PlayOneShot();
         }
     }
 }
