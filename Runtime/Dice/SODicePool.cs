@@ -8,11 +8,11 @@ namespace Meangpu.Dice
     public class SODicePool : ScriptableObject
     {
         public List<Sprite> TemplateObject = new();
-        public List<SpriteWithValue> DiceList = new();
+        public List<SpriteWithValue> DiceList;
 
         [Header("This two below is for debug only")]
-        public List<SpriteWithValue> ObjectLootList = new();
-        public List<SpriteWithValue> ObjectCanRemoveList = new();
+        public List<SpriteWithValue> ObjectLootList;
+        public List<SpriteWithValue> ObjectCanRemoveList;
 
         bool _isInitialized;
 
@@ -22,11 +22,13 @@ namespace Meangpu.Dice
         [Button]
         public void CREATE_DICE_LIST_FROM_SPRITE()
         {
+            DiceList = new();
             DiceList.Clear();
             for (var i = 0; i < TemplateObject.Count; i++)
             {
                 DiceList.Add(new(TemplateObject[i], i + 1));
             }
+            ResetInit();
         }
 
         [Button]
@@ -48,6 +50,7 @@ namespace Meangpu.Dice
 
         private void SetupLootList()
         {
+            ObjectLootList = new();
             ObjectLootList.Clear();
             ObjectLootList.AddRange(DiceList);
         }
