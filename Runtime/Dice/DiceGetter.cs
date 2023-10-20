@@ -29,11 +29,16 @@ namespace Meangpu.Dice
 
             SpriteWithValue finalDiceObj = _pool.GetRandomDice();
 
-            if (_doPlayAnimation) DoShuffleDiceAnimation();
+            if (_doPlayAnimation)
+            {
+                DoShuffleDiceAnimation();
+                _diceImgDisplay.sprite = finalDiceObj.Sprite;
+                return finalDiceObj;
+            }
 
-            _diceImgDisplay.sprite = finalDiceObj.Sprite;
-
+            _finishSound?.PlayOneShot();
             _onFinishEvent?.Invoke();
+
             return finalDiceObj;
         }
 
@@ -51,6 +56,7 @@ namespace Meangpu.Dice
                 _diceImgDisplay.sprite = diceObj.Sprite;
             }
             _finishSound?.PlayOneShot();
+            _onFinishEvent?.Invoke();
         }
     }
 }
