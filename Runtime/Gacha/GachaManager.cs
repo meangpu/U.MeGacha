@@ -46,7 +46,7 @@ namespace Meangpu.Gacha
                 }
                 else
                 {
-                    Debug.Log($"<color=red>Object is not set to auto reset</color>");
+                    Debug.Log("<color=red>Object is not set to auto reset</color>");
                     return null;
                 }
             }

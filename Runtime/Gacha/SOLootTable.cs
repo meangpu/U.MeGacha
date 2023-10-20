@@ -25,7 +25,7 @@ namespace Meangpu.Gacha
             DropRate.Clear();
             foreach (GameObject obj in TemplateObject)
             {
-                DropRate.Add(new (obj, 1));
+                DropRate.Add(new(obj, 1));
             }
         }
 
@@ -73,7 +73,7 @@ namespace Meangpu.Gacha
                 }
                 else
                 {
-                    Debug.Log($"<color=red>Object is not set to auto reset</color>");
+                    Debug.Log("<color=red>Object is not set to auto reset</color>");
                     return null;
                 }
             }
