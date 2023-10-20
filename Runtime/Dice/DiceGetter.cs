@@ -31,10 +31,11 @@ namespace Meangpu.Dice
 
             if (_doPlayAnimation)
             {
-                DoShuffleDiceAnimation();
-                _diceImgDisplay.sprite = finalDiceObj.Sprite;
+                DoShuffleDiceAnimation(finalDiceObj);
                 return finalDiceObj;
             }
+
+            _diceImgDisplay.sprite = finalDiceObj.Sprite;
 
             _finishSound?.PlayOneShot();
             _onFinishEvent?.Invoke();
@@ -43,9 +44,9 @@ namespace Meangpu.Dice
         }
 
         [Button]
-        public void DoShuffleDiceAnimation() => StartCoroutine(ShuffleDiceAnimation());
+        public void DoShuffleDiceAnimation(SpriteWithValue finalFaceTarget) => StartCoroutine(ShuffleDiceAnimation(finalFaceTarget));
 
-        IEnumerator ShuffleDiceAnimation()
+        IEnumerator ShuffleDiceAnimation(SpriteWithValue finalFaceTarget)
         {
             for (var i = 0; i < _randomShuffleCount; i++)
             {
@@ -55,6 +56,9 @@ namespace Meangpu.Dice
                 SpriteWithValue diceObj = _pool.GetRandomDice();
                 _diceImgDisplay.sprite = diceObj.Sprite;
             }
+
+            _diceImgDisplay.sprite = finalFaceTarget.Sprite;
+
             _finishSound?.PlayOneShot();
             _onFinishEvent?.Invoke();
         }
