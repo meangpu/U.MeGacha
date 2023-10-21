@@ -29,7 +29,6 @@ namespace Meangpu.Dice
         public SpriteWithValue GetRandomDice()
         {
             _onStartEvent?.Invoke();
-
             SpriteWithValue finalDiceObj = _pool.GetRandomDice();
 
             if (_doPlayAnimation)
@@ -68,17 +67,6 @@ namespace Meangpu.Dice
         }
 
         [Button]
-        public void DoTestShuffleNoReturn()
-        {
-            _onStartEvent?.Invoke();
-            SpriteWithValue finalDiceObj = _pool.GetRandomDice();
-            if (_doPlayAnimation)
-            {
-                StartCoroutine(ShuffleDiceAnimation(finalDiceObj));
-                return;
-            }
-            _diceImgDisplay.sprite = finalDiceObj.Sprite;
-            FinishInvoke(finalDiceObj);
-        }
+        public void DoTestShuffleNoReturn() => GetRandomDice();
     }
 }
