@@ -31,6 +31,17 @@ namespace Meangpu.Dice
             ResetInit();
         }
 
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (TemplateObject.Count != DiceList.Count)
+            {
+                CREATE_DICE_LIST_FROM_SPRITE();
+            }
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+#endif
+
         [Button]
         public void ResetInit()
         {
