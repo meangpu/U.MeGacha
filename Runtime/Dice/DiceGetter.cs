@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Meangpu.Audio;
 using System.Collections;
 using UnityEngine.Events;
+using System;
 
 namespace Meangpu.Dice
 {
@@ -18,9 +19,11 @@ namespace Meangpu.Dice
         [SerializeField] SOSound _finishSound;
         [Header("Setting")]
         [SerializeField] bool _doPlayAnimation;
-        [SerializeField] float _timeBetweenRandom = 0.05f;
-        [SerializeField] float _randomShuffleCount = 10;
+        [SerializeField] Vector2 _timeBetweenRandom = new(0.03f, 0.05f);
+        [SerializeField] Vector2Int _randomShuffleCount = new(5, 10);
         [SerializeField] SOSound _randomShuffleAudio;
+
+        public static Action<SpriteWithValue> OnFinishDice;
 
         [Button]
         public SpriteWithValue GetRandomDice()
@@ -31,36 +34,51 @@ namespace Meangpu.Dice
 
             if (_doPlayAnimation)
             {
-                DoShuffleDiceAnimation(finalDiceObj);
+                StartCoroutine(ShuffleDiceAnimation(finalDiceObj));
                 return finalDiceObj;
             }
 
             _diceImgDisplay.sprite = finalDiceObj.Sprite;
-
-            _finishSound?.PlayOneShot();
-            _onFinishEvent?.Invoke();
+            FinishInvoke(finalDiceObj);
 
             return finalDiceObj;
         }
 
-        [Button]
-        public void DoShuffleDiceAnimation(SpriteWithValue finalFaceTarget) => StartCoroutine(ShuffleDiceAnimation(finalFaceTarget));
+        private void FinishInvoke(SpriteWithValue finalDiceObj)
+        {
+            _finishSound?.PlayOneShot();
+            _onFinishEvent?.Invoke();
+            OnFinishDice?.Invoke(finalDiceObj);
+        }
 
         IEnumerator ShuffleDiceAnimation(SpriteWithValue finalFaceTarget)
         {
-            for (var i = 0; i < _randomShuffleCount; i++)
+            int numRandomCount = UnityEngine.Random.Range(_randomShuffleCount.x, _randomShuffleCount.y);
+            for (var i = 0; i < numRandomCount; i++)
             {
-                yield return new WaitForSeconds(_timeBetweenRandom);
+                float waitTime = UnityEngine.Random.Range(_timeBetweenRandom.x, _timeBetweenRandom.y);
+                yield return new WaitForSeconds(waitTime);
                 _onShuffleEvent?.Invoke();
                 _randomShuffleAudio?.PlayOneShot();
                 SpriteWithValue diceObj = _pool.GetRandomDice();
                 _diceImgDisplay.sprite = diceObj.Sprite;
             }
-
             _diceImgDisplay.sprite = finalFaceTarget.Sprite;
+            FinishInvoke(finalFaceTarget);
+        }
 
-            _finishSound?.PlayOneShot();
-            _onFinishEvent?.Invoke();
+        [Button]
+        public void DoTestShuffleNoReturn()
+        {
+            _onStartEvent?.Invoke();
+            SpriteWithValue finalDiceObj = _pool.GetRandomDice();
+            if (_doPlayAnimation)
+            {
+                StartCoroutine(ShuffleDiceAnimation(finalDiceObj));
+                return;
+            }
+            _diceImgDisplay.sprite = finalDiceObj.Sprite;
+            FinishInvoke(finalDiceObj);
         }
     }
 }
