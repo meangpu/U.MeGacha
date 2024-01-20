@@ -1,5 +1,5 @@
 using UnityEngine;
-using EasyButtons;
+using VInspector;
 using UnityEngine.UI;
 using Meangpu.Audio;
 using System.Collections;
