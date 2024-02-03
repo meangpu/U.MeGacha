@@ -4,9 +4,11 @@ using Meangpu.Pool;
 using System.Collections.Generic;
 using Meangpu.Util;
 using System.Linq;
+using UnityEngine.Events;
 
 namespace Meangpu.Gacha
 {
+    // if use feel, extend from this base class and use GetObjectFromPreview as start function
     public class GachaManager : MonoBehaviour
     {
         [Expandable]
@@ -18,9 +20,10 @@ namespace Meangpu.Gacha
         [SerializeField] protected bool _refillOnPreviewEmpty;
         [SerializeField] protected Vector3 _spawnOffset = new();
 
-        public SerializedDictionary<GameObject, int> _dictionaryGachaCount = new();
+        [SerializeField] protected SerializedDictionary<GameObject, int> _dictionaryGachaCount = new();
 
         [SerializeField] protected bool _ParentDeleteChildObjectOnSpawn;
+        [SerializeField] protected UnityEvent _OnDoGachaEvent;
 
         public void GetRandomFromLootTable() => _startTable.GetRandomObject();
 
@@ -63,7 +66,7 @@ namespace Meangpu.Gacha
                 {
                     GameObject previewObj = PoolManager.SpawnObject(key, _parentPreview);
                     previewObj.name = key.name;
-                    previewObj.transform.localPosition += (_spawnOffset * (i + 1)) - (_startTable.ObjectLootList.Count * .5f * _spawnOffset);
+                    previewObj.transform.localPosition += (_spawnOffset * (i + 1)) - (_dictionaryGachaCount.Values.Sum() * .5f * _spawnOffset);
                     _previewObjectList.Add(previewObj);
                     i += 1;
                 }
@@ -90,6 +93,8 @@ namespace Meangpu.Gacha
             _previewObjectList.RemoveAt(randomIndex);
             AddObjValueInDict(finalObject);
             CheckIfListError();
+            _OnDoGachaEvent?.Invoke();
+            ActionGacha.OnRollGacha?.Invoke();
             return finalObject;
         }
 
@@ -120,6 +125,7 @@ namespace Meangpu.Gacha
                     _dictionaryGachaCount.Add(item.Key, item.Value);
                 }
             }
+            ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
         }
 
         public void AddObjValueInDict(GameObject targetObj, int count = -1)
@@ -132,6 +138,7 @@ namespace Meangpu.Gacha
                     return;
                 }
             }
+            ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
         }
 
         public void SetObjValueInDict(GameObject targetObj, int newValue)
@@ -144,6 +151,7 @@ namespace Meangpu.Gacha
                     return;
                 }
             }
+            ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
         }
 
 
