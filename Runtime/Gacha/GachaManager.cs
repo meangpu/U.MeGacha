@@ -130,9 +130,7 @@ namespace Meangpu.Gacha
             GameObject finalObject = _previewObjectList[randomIndex];
             _previewObjectList.RemoveAt(randomIndex);
             AddObjValueInDict(finalObject);
-
             CheckIfListError();
-
             return finalObject;
         }
 
@@ -153,13 +151,5 @@ namespace Meangpu.Gacha
             SetObjValueInDict(targetObj, newValue);
             ReSpawnObjectFromDict();
         }
-
-        public GameObject objToTest;
-        [Button]
-        void TestUpdate()
-        {
-            UpdateDictAndPreviewData(objToTest, 10);
-        }
-
     }
 }
