@@ -136,10 +136,10 @@ namespace Meangpu.Gacha
                 if (key.name == targetObj.name)
                 {
                     _dictionaryGachaCount[key] += count;
+                    ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
                     return;
                 }
             }
-            ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
         }
 
         public void SetObjValueInDict(GameObject targetObj, int newValue)
@@ -149,10 +149,10 @@ namespace Meangpu.Gacha
                 if (key.name == targetObj.name)
                 {
                     _dictionaryGachaCount[key] = newValue;
+                    ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
                     return;
                 }
             }
-            ActionGacha.OnCurrentDictUpdate?.Invoke(_dictionaryGachaCount);
         }
 
 
