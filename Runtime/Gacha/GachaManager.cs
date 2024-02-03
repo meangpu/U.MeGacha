@@ -26,8 +26,8 @@ namespace Meangpu.Gacha
         [Button]
         public void CreatePreviewGameObject()
         {
+            InitDictionary();
             _startTable.INIT_OBJ_POOL();
-            // InitDictionary();
 
             KillAllChild.KillAllChildInTransform(_parentPreview);
             _previewObjectList.Clear();
@@ -41,23 +41,44 @@ namespace Meangpu.Gacha
             }
         }
 
-        // [Button]
-        // public void InitDictionary()
-        // {
-        //     foreach (GachaWithRate gachaItem in _startTable.DropRate)
-        //     {
-        //         if (_dictionaryGachaCount.ContainsKey(gachaItem.Object))
-        //         {
-        //             _dictionaryGachaCount[gachaItem.Object] = gachaItem.Rate;
-        //         }
-        //         else
-        //         {
-        //             _dictionaryGachaCount.Add(gachaItem.Object, gachaItem.Rate);
-        //         }
-        //     }
-        // }
+        [Button]
+        public void ReSpawnObjectFromDict()
+        {
+            KillAllChild.KillAllChildInTransform(_parentPreview);
+            _previewObjectList.Clear();
 
-        public void UpdateObjectDict(GameObject targetObj, int count = -1)
+            int i = 0;
+            foreach (GameObject key in _dictionaryGachaCount.Keys)
+            {
+                for (int j = 0, length = _dictionaryGachaCount[key]; j < length; j++)
+                {
+                    GameObject previewObj = PoolManager.SpawnObject(key, _parentPreview);
+                    previewObj.name = key.name;
+                    previewObj.transform.localPosition += (_spawnOffset * (i + 1)) - (_startTable.ObjectLootList.Count * .5f * _spawnOffset);
+                    _previewObjectList.Add(previewObj);
+                    i += 1;
+                }
+            }
+        }
+
+
+        public void InitDictionary()
+        {
+            _dictionaryGachaCount = new();
+            foreach (KeyValuePair<GameObject, int> item in _startTable.DropRate)
+            {
+                if (_dictionaryGachaCount.ContainsKey(item.Key))
+                {
+                    _dictionaryGachaCount[item.Key] = item.Value;
+                }
+                else
+                {
+                    _dictionaryGachaCount.Add(item.Key, item.Value);
+                }
+            }
+        }
+
+        public void RemoveObjectFromDict(GameObject targetObj, int count = -1)
         {
             foreach (GameObject key in _dictionaryGachaCount.Keys)
             {
@@ -87,7 +108,7 @@ namespace Meangpu.Gacha
             int randomIndex = Random.Range(0, _previewObjectList.Count);
             GameObject finalObject = _previewObjectList[randomIndex];
             _previewObjectList.RemoveAt(randomIndex);
-            UpdateObjectDict(finalObject);
+            RemoveObjectFromDict(finalObject);
 
             return finalObject;
         }
@@ -103,5 +124,6 @@ namespace Meangpu.Gacha
             nowObj.transform.localRotation = Quaternion.identity;
             nowObj.transform.localScale = Vector3.one;
         }
+
     }
 }
