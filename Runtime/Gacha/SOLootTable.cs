@@ -19,18 +19,9 @@ namespace Meangpu.Gacha
         [SerializeField] bool _isDeleteAfterGet;
         [SerializeField] bool _isAutoReset = true;
 
-        [Button]
-        public void INIT_DROP_RATE_BY_OBJECT()
-        {
-            DropRate.Clear();
-            foreach (GameObject obj in TemplateObject)
-            {
-                DropRate.Add(new(obj, 1));
-            }
-        }
 
         [Button]
-        public void ResetInit()
+        public void INIT_OBJ_POOL()
         {
             _isInitialized = false;
             InitializeNormalPool();
@@ -96,6 +87,16 @@ namespace Meangpu.Gacha
         {
             for (int i = 0; i < count; i++)
                 GetRandomObject();
+        }
+
+        [Button]
+        public void INIT_DROP_RATE_BY_OBJECT()
+        {
+            DropRate.Clear();
+            foreach (GameObject obj in TemplateObject)
+            {
+                DropRate.Add(new(obj, 1));
+            }
         }
     }
 }

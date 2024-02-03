@@ -17,21 +17,43 @@ namespace Meangpu.Gacha
         [SerializeField] protected bool _refillOnPreviewEmpty;
         [SerializeField] protected Vector3 _spawnOffset = new();
 
-        [SerializeField] protected bool _DeleteObjectOnSpawn;
+        public SerializedDictionary<GameObject, int> _dictionaryGachaCount = new();
+
+        [SerializeField] protected bool _ParentDeleteObjectOnSpawn;
 
         public void GetRandomFromLootTable() => _startTable.GetRandomObject();
 
         [Button]
         public void CreatePreviewGameObject()
         {
-            _startTable.ResetInit();
+            _startTable.INIT_OBJ_POOL();
+            InitDictionary();
+
             KillAllChild.KillAllChildInTransform(_parentPreview);
             _previewObjectList.Clear();
+
             for (int i = 0; i < _startTable.ObjectLootList.Count; i++)
             {
                 GameObject previewObj = PoolManager.SpawnObject(_startTable.ObjectLootList[i], _parentPreview);
+                previewObj.name = _startTable.ObjectLootList[i].name;
                 previewObj.transform.localPosition += (_spawnOffset * (i + 1)) - (_startTable.ObjectLootList.Count * .5f * _spawnOffset);
                 _previewObjectList.Add(previewObj);
+            }
+        }
+
+        [Button]
+        public void InitDictionary()
+        {
+            foreach (GachaWithRate gachaItem in _startTable.DropRate)
+            {
+                if (_dictionaryGachaCount.ContainsKey(gachaItem.Object))
+                {
+                    _dictionaryGachaCount[gachaItem.Object] = gachaItem.Rate;
+                }
+                else
+                {
+                    _dictionaryGachaCount.Add(gachaItem.Object, gachaItem.Rate);
+                }
             }
         }
 
@@ -57,9 +79,9 @@ namespace Meangpu.Gacha
         }
 
         [Button]
-        public void DefaultSpawnFromPreview()
+        public void SetToSpawnParentFromPreview()
         {
-            if (_DeleteObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
+            if (_ParentDeleteObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
             GameObject nowObj = GetObjectFromPreview();
             if (nowObj == null) return;
             nowObj.transform.SetParent(_parentSpawnGacha);
