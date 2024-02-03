@@ -8,7 +8,7 @@ namespace Meangpu.Gacha
     public class SOLootTable : ScriptableObject
     {
         public List<GameObject> TemplateObject = new();
-        public List<GachaWithRate> DropRate = new();
+        public SerializedDictionary<GameObject, int> DropRate = new();
 
         [Header("This two below is for debug only")]
         public List<GameObject> ObjectLootList = new();
@@ -40,9 +40,9 @@ namespace Meangpu.Gacha
         private void SetupLootList()
         {
             ObjectLootList.Clear();
-            foreach (GachaWithRate item in DropRate)
+            foreach (KeyValuePair<GameObject, int> item in DropRate)
             {
-                for (int i = 0; i < item.Rate; i++) ObjectLootList.Add(item.Object);
+                for (int i = 0; i < item.Value; i++) ObjectLootList.Add(item.Key);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Meangpu.Gacha
             DropRate.Clear();
             foreach (GameObject obj in TemplateObject)
             {
-                DropRate.Add(new(obj, 1));
+                DropRate.Add(obj, 1);
             }
         }
     }

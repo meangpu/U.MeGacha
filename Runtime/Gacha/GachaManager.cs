@@ -27,7 +27,7 @@ namespace Meangpu.Gacha
         public void CreatePreviewGameObject()
         {
             _startTable.INIT_OBJ_POOL();
-            InitDictionary();
+            // InitDictionary();
 
             KillAllChild.KillAllChildInTransform(_parentPreview);
             _previewObjectList.Clear();
@@ -41,18 +41,30 @@ namespace Meangpu.Gacha
             }
         }
 
-        [Button]
-        public void InitDictionary()
+        // [Button]
+        // public void InitDictionary()
+        // {
+        //     foreach (GachaWithRate gachaItem in _startTable.DropRate)
+        //     {
+        //         if (_dictionaryGachaCount.ContainsKey(gachaItem.Object))
+        //         {
+        //             _dictionaryGachaCount[gachaItem.Object] = gachaItem.Rate;
+        //         }
+        //         else
+        //         {
+        //             _dictionaryGachaCount.Add(gachaItem.Object, gachaItem.Rate);
+        //         }
+        //     }
+        // }
+
+        public void UpdateObjectDict(GameObject targetObj, int count = -1)
         {
-            foreach (GachaWithRate gachaItem in _startTable.DropRate)
+            foreach (GameObject key in _dictionaryGachaCount.Keys)
             {
-                if (_dictionaryGachaCount.ContainsKey(gachaItem.Object))
+                if (key.name == targetObj.name)
                 {
-                    _dictionaryGachaCount[gachaItem.Object] = gachaItem.Rate;
-                }
-                else
-                {
-                    _dictionaryGachaCount.Add(gachaItem.Object, gachaItem.Rate);
+                    _dictionaryGachaCount[key] += count;
+                    return;
                 }
             }
         }
@@ -75,6 +87,8 @@ namespace Meangpu.Gacha
             int randomIndex = Random.Range(0, _previewObjectList.Count);
             GameObject finalObject = _previewObjectList[randomIndex];
             _previewObjectList.RemoveAt(randomIndex);
+            UpdateObjectDict(finalObject);
+
             return finalObject;
         }
 
