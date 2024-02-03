@@ -21,7 +21,6 @@ namespace Meangpu.Gacha
 
         private void OnGachaUpdate(Dictionary<GameObject, int> dictionary)
         {
-            Debug.Log($"what");
             if (dictionary.ContainsKey(keyData))
             {
                 UpdateCount(dictionary[keyData]);
