@@ -71,6 +71,41 @@ namespace Meangpu.Gacha
         }
 
 
+        public GameObject GetObjectFromPreview()
+        {
+            if (_previewObjectList.Count == 0)
+            {
+                if (_refillOnPreviewEmpty)
+                {
+                    CreatePreviewGameObject();
+                }
+                else
+                {
+                    Debug.Log("<color=red>Object is not set to auto reset</color>");
+                    return null;
+                }
+            }
+            int randomIndex = Random.Range(0, _previewObjectList.Count);
+            GameObject finalObject = _previewObjectList[randomIndex];
+            _previewObjectList.RemoveAt(randomIndex);
+            AddObjValueInDict(finalObject);
+            CheckIfListError();
+            return finalObject;
+        }
+
+        [Button]
+        public void SetToSpawnParentFromPreview()
+        {
+            if (_ParentDeleteChildObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
+            GameObject nowObj = GetObjectFromPreview();
+            if (nowObj == null) return;
+            nowObj.transform.SetParent(_parentSpawnGacha);
+            nowObj.transform.localPosition = Vector3.zero;
+            nowObj.transform.localRotation = Quaternion.identity;
+            nowObj.transform.localScale = Vector3.one;
+        }
+
+
         public void InitDictionary()
         {
             _dictionaryGachaCount = new();
@@ -111,40 +146,6 @@ namespace Meangpu.Gacha
             }
         }
 
-        [Button]
-        public GameObject GetObjectFromPreview()
-        {
-            if (_previewObjectList.Count == 0)
-            {
-                if (_refillOnPreviewEmpty)
-                {
-                    CreatePreviewGameObject();
-                }
-                else
-                {
-                    Debug.Log("<color=red>Object is not set to auto reset</color>");
-                    return null;
-                }
-            }
-            int randomIndex = Random.Range(0, _previewObjectList.Count);
-            GameObject finalObject = _previewObjectList[randomIndex];
-            _previewObjectList.RemoveAt(randomIndex);
-            AddObjValueInDict(finalObject);
-            CheckIfListError();
-            return finalObject;
-        }
-
-        [Button]
-        public void SetToSpawnParentFromPreview()
-        {
-            if (_ParentDeleteChildObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
-            GameObject nowObj = GetObjectFromPreview();
-            if (nowObj == null) return;
-            nowObj.transform.SetParent(_parentSpawnGacha);
-            nowObj.transform.localPosition = Vector3.zero;
-            nowObj.transform.localRotation = Quaternion.identity;
-            nowObj.transform.localScale = Vector3.one;
-        }
 
         public void UpdateDictAndPreviewData(GameObject targetObj, int newValue)
         {
