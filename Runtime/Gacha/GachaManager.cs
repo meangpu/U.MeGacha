@@ -3,6 +3,7 @@ using UnityEngine;
 using Meangpu.Pool;
 using System.Collections.Generic;
 using Meangpu.Util;
+using System.Linq;
 
 namespace Meangpu.Gacha
 {
@@ -19,9 +20,17 @@ namespace Meangpu.Gacha
 
         public SerializedDictionary<GameObject, int> _dictionaryGachaCount = new();
 
-        [SerializeField] protected bool _ParentDeleteObjectOnSpawn;
+        [SerializeField] protected bool _ParentDeleteChildObjectOnSpawn;
 
         public void GetRandomFromLootTable() => _startTable.GetRandomObject();
+
+        public void CheckIfListError()
+        {
+            if (_previewObjectList.Count != _dictionaryGachaCount.Values.Sum())
+            {
+                Debug.Log($"<color=#4ec9b0>Dict Count Is not same as preview!!!</color>");
+            }
+        }
 
         [Button]
         public void CreatePreviewGameObject()
@@ -78,13 +87,25 @@ namespace Meangpu.Gacha
             }
         }
 
-        public void RemoveObjectFromDict(GameObject targetObj, int count = -1)
+        public void AddObjValueInDict(GameObject targetObj, int count = -1)
         {
             foreach (GameObject key in _dictionaryGachaCount.Keys)
             {
                 if (key.name == targetObj.name)
                 {
                     _dictionaryGachaCount[key] += count;
+                    return;
+                }
+            }
+        }
+
+        public void SetObjValueInDict(GameObject targetObj, int newValue)
+        {
+            foreach (GameObject key in _dictionaryGachaCount.Keys)
+            {
+                if (key.name == targetObj.name)
+                {
+                    _dictionaryGachaCount[key] = newValue;
                     return;
                 }
             }
@@ -108,7 +129,9 @@ namespace Meangpu.Gacha
             int randomIndex = Random.Range(0, _previewObjectList.Count);
             GameObject finalObject = _previewObjectList[randomIndex];
             _previewObjectList.RemoveAt(randomIndex);
-            RemoveObjectFromDict(finalObject);
+            AddObjValueInDict(finalObject);
+
+            CheckIfListError();
 
             return finalObject;
         }
@@ -116,13 +139,26 @@ namespace Meangpu.Gacha
         [Button]
         public void SetToSpawnParentFromPreview()
         {
-            if (_ParentDeleteObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
+            if (_ParentDeleteChildObjectOnSpawn) KillAllChild.KillAllChildInTransform(_parentSpawnGacha);
             GameObject nowObj = GetObjectFromPreview();
             if (nowObj == null) return;
             nowObj.transform.SetParent(_parentSpawnGacha);
             nowObj.transform.localPosition = Vector3.zero;
             nowObj.transform.localRotation = Quaternion.identity;
             nowObj.transform.localScale = Vector3.one;
+        }
+
+        public void UpdateDictAndPreviewData(GameObject targetObj, int newValue)
+        {
+            SetObjValueInDict(targetObj, newValue);
+            ReSpawnObjectFromDict();
+        }
+
+        public GameObject objToTest;
+        [Button]
+        void TestUpdate()
+        {
+            UpdateDictAndPreviewData(objToTest, 10);
         }
 
     }
