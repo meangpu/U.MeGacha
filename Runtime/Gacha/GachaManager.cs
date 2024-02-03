@@ -21,6 +21,7 @@ namespace Meangpu.Gacha
         [SerializeField] protected Vector3 _spawnOffset = new();
 
         [SerializeField] protected SerializedDictionary<GameObject, int> _dictionaryGachaCount = new();
+        public SerializedDictionary<GameObject, int> NowDictData => _dictionaryGachaCount;
 
         [SerializeField] protected bool _ParentDeleteChildObjectOnSpawn;
         [SerializeField] protected UnityEvent _OnDoGachaEvent;
