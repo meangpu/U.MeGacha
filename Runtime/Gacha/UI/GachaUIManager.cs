@@ -22,6 +22,7 @@ namespace Meangpu.Gacha
                 GachaItemUI nowObject = (GachaItemUI)UnityEditor.PrefabUtility.InstantiatePrefab(_uiItemPrefab);
                 nowObject.transform.SetParent(_parentTrans, false);
                 nowObject.InitUI(item.Key, item.Value);
+                nowObject.gameObject.name = item.Key.name;
             }
 #endif
         }

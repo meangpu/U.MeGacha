@@ -11,6 +11,8 @@ namespace Meangpu.Gacha
         [SerializeField] protected TMP_Text _itemCount;
         [SerializeField] protected TMP_Text _itemGetPercent;
         [SerializeField] string _percentEndText = "%";
+        float _percentToGet;
+
         public GameObject keyData;
 
         void OnEnable()
@@ -31,8 +33,10 @@ namespace Meangpu.Gacha
 
             if (_itemGetPercent == null) return;
 
-            float percentToGet = (float)dictionary[keyData] / (float)dictionary.Values.Sum();
-            UpdatePercent(percentToGet);
+            _percentToGet = dictionary[keyData] / (float)dictionary.Values.Sum();
+
+            if (float.IsNaN(_percentToGet)) _percentToGet = 0;
+            UpdatePercent(_percentToGet);
         }
 
         public virtual void InitUI(GameObject obj, int count)
