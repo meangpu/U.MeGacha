@@ -53,8 +53,14 @@ namespace Meangpu.Gacha
             keyData = obj;
             _itemName.SetText(obj.name);
             UpdateCount(count);
-            UpdatePercent(0);
-            InitSlider();
+            if (_itemGetPercent != null)
+            {
+                UpdatePercent(0);
+            }
+            if (_sliderPercent != null)
+            {
+                InitSlider();
+            };
         }
 
         void InitSlider()
