@@ -15,11 +15,15 @@ namespace Meangpu.Gacha
         public void SetupUI()
         {
             KillAllChild.KillAllChildInTransform(_parentTrans);
+
+#if UNITY_EDITOR
             foreach (KeyValuePair<GameObject, int> item in _gachaManagerScpt.NowDictData)
             {
-                GachaItemUI nowUI = Instantiate(_uiItemPrefab, _parentTrans);
-                nowUI.InitUI(item.Key, item.Value);
+                GachaItemUI nowObject = (GachaItemUI)UnityEditor.PrefabUtility.InstantiatePrefab(_uiItemPrefab);
+                nowObject.transform.SetParent(_parentTrans, false);
+                nowObject.InitUI(item.Key, item.Value);
             }
+#endif
         }
 
     }

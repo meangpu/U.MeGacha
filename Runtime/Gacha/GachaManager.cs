@@ -25,6 +25,12 @@ namespace Meangpu.Gacha
 
         [SerializeField] protected bool _ParentDeleteChildObjectOnSpawn;
         [SerializeField] protected UnityEvent _OnDoGachaEvent;
+        [SerializeField] bool _updateDictOnStart = true;
+
+        private void Start()
+        {
+            if (_updateDictOnStart) ActionGacha.OnCurrentDictUpdate(_dictionaryGachaCount);
+        }
 
         public void GetRandomFromLootTable() => _startTable.GetRandomObject();
 
