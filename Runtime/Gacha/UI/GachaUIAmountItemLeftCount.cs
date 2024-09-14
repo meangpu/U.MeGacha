@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Meangpu.Gacha
 {
-    public class GachaItemUILeftCount : MonoBehaviour
+    public class GachaUIAmountItemLeftCount : MonoBehaviour
     {
         [SerializeField] TMP_Text _countTxt;
         [SerializeField] GachaManager _gachaManagerScpt; // for update on start
