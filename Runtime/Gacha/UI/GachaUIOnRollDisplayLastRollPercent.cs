@@ -7,14 +7,15 @@ namespace Meangpu.Gacha
     {
         [SerializeField] TMP_Text _rollPercent;
         [SerializeField] string _percentEndText = "%";
+        [SerializeField] string _floatingPoint = "F2";
 
         void OnEnable() => ActionGacha.OnGetRandomItemThePercentIs += DisplayLastRollPercent;
         void OnDisable() => ActionGacha.OnGetRandomItemThePercentIs -= DisplayLastRollPercent;
 
         private void DisplayLastRollPercent(float percent)
         {
-            Debug.Log(percent);
-            _rollPercent.SetText($"{percent * 100:F2}{_percentEndText}");
+            string percentNumber = (percent * 100).ToString(_floatingPoint);
+            _rollPercent.SetText($"{percentNumber}{_percentEndText}");
         }
     }
 }

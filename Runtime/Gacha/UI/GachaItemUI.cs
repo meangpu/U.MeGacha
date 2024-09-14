@@ -14,6 +14,7 @@ namespace Meangpu.Gacha
         [SerializeField] protected TMP_Text _itemName;
         [SerializeField] protected TMP_Text _itemCount;
         [SerializeField] protected TMP_Text _itemGetPercent;
+        [SerializeField] protected string _floatingPoint = "F2";
         [SerializeField] string _percentEndText = "%";
         [SerializeField] Slider _sliderPercent;
 
@@ -71,7 +72,11 @@ namespace Meangpu.Gacha
         }
 
         public void UpdateCount(int newCount) => _itemCount.SetText(newCount.ToString());
-        public void UpdatePercent(float percent) => _itemGetPercent.SetText($"{percent * 100:F2}{_percentEndText}");
         public void UpdatePercentSlider(float percent) => _sliderPercent.value = percent * 100;
+        public void UpdatePercent(float percent)
+        {
+            string percentNumber = (percent * 100).ToString(_floatingPoint);
+            _itemGetPercent.SetText($"{percentNumber}{_percentEndText}");
+        }
     }
 }
