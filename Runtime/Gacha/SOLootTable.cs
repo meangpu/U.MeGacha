@@ -75,7 +75,7 @@ namespace Meangpu.Gacha
 
             int thisCount = ObjectCanRemoveList.Count(x => x.name == finalObject.name);
             float percentToGetThis = thisCount / (float)ObjectCanRemoveList.Count();
-            ActionGacha.OnGetRandomItemThePercentIs?.Invoke(percentToGetThis);
+            ActionGacha.OnLastRollInfo?.Invoke(percentToGetThis, finalObject.name);
 
 
             ObjectCanRemoveList.RemoveAt(randomIndex);
@@ -91,7 +91,7 @@ namespace Meangpu.Gacha
 
             int thisCount = ObjectCanRemoveList.Count(x => x.name == finalObject.name);
             float percentToGetThis = thisCount / (float)ObjectCanRemoveList.Count();
-            ActionGacha.OnGetRandomItemThePercentIs?.Invoke(percentToGetThis);
+            ActionGacha.OnLastRollInfo?.Invoke(percentToGetThis, finalObject.name);
 
             return finalObject;
         }

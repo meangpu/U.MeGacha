@@ -8,6 +8,6 @@ namespace Meangpu.Gacha
     {
         public static Action OnRollGacha;
         public static Action<Dictionary<GameObject, int>> OnCurrentDictUpdate;
-        public static Action<float> OnGetRandomItemThePercentIs;
+        public static Action<float, string> OnLastRollInfo;
     }
 }
