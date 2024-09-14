@@ -100,7 +100,7 @@ namespace Meangpu.Gacha
             int randomIndex = Random.Range(0, _previewObjectList.Count);
             GameObject finalObject = _previewObjectList[randomIndex];
 
-            float percentToGetThis = _dictionaryGachaCount[finalObject] / (float)_dictionaryGachaCount.Values.Sum();
+            float percentToGetThis = _dictionaryGachaCount.FirstOrDefault(x => x.Key.name == finalObject.name).Value / (float)_dictionaryGachaCount.Values.Sum();
             ActionGacha.OnGetRandomItemThePercentIs?.Invoke(percentToGetThis);
 
             _previewObjectList.RemoveAt(randomIndex);

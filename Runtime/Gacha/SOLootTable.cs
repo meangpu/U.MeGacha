@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 using VInspector;
 
 namespace Meangpu.Gacha
@@ -71,6 +72,12 @@ namespace Meangpu.Gacha
 
             int randomIndex = Random.Range(0, ObjectCanRemoveList.Count);
             GameObject finalObject = ObjectCanRemoveList[randomIndex];
+
+            int thisCount = ObjectCanRemoveList.Count(x => x.name == finalObject.name);
+            float percentToGetThis = thisCount / (float)ObjectCanRemoveList.Count();
+            ActionGacha.OnGetRandomItemThePercentIs?.Invoke(percentToGetThis);
+
+
             ObjectCanRemoveList.RemoveAt(randomIndex);
             return finalObject;
         }
@@ -79,7 +86,14 @@ namespace Meangpu.Gacha
         {
             InitializeNormalPool();
             int randomIndex = Random.Range(0, ObjectLootList.Count);
-            return ObjectLootList[randomIndex];
+
+            GameObject finalObject = ObjectLootList[randomIndex];
+
+            int thisCount = ObjectCanRemoveList.Count(x => x.name == finalObject.name);
+            float percentToGetThis = thisCount / (float)ObjectCanRemoveList.Count();
+            ActionGacha.OnGetRandomItemThePercentIs?.Invoke(percentToGetThis);
+
+            return finalObject;
         }
 
         [Button]
